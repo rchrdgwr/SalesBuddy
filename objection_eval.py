@@ -42,7 +42,7 @@ def process_salesbud_file(file_path: str) -> List[Tuple[ObjectionInput, Objectio
     print(f"{datetime.now()}: Processing file: salesbud_examples.csv")
 
     # Read the CSV file into a DataFrame
-    df = pd.read_csv('salesbud_examples.csv')
+    df = pd.read_csv('data/salesbud_examples.csv')
 
     # List to hold the processed objections
     examples = []  # List to hold examples
