@@ -47,7 +47,7 @@ nltk==3.9.1
 rouge-score==0.1.2
 sentence-transformers==2.3.0
 pydantic==2.7.4
-#openai-whisper==20240607
+openai-whisper==20240930
 
 # Nitins dependencies
 fpdf==1.7.2
