@@ -5,6 +5,7 @@ def prepare_chain_parameters(session_state, message, history):
     next_question = ""  
     ground_truth = ""
     command = ""
+    print(f"Index: {session_state.current_question_index}")
     if session_state.current_question_index == 0:
         previous_question = ""
         rep_answer = ""
@@ -18,8 +19,6 @@ def prepare_chain_parameters(session_state, message, history):
         ground_truth = session_state.questions[session_state.current_question_index - 1]["ground_truth"]
         command = """Thank the customer, offer a comment on the answer and overall performance.
             Conclude the conversation with a summary and give a farewell. 
-            If the answers were good, give a positive farewell and offer a follow up meeting. 
-            If the answers were poor, give a poor farewell.
             You can add additional comments as needed.
         """
     else:

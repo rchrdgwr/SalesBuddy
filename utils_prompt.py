@@ -96,9 +96,9 @@ def get_system_template_openai_short():
     system_template = """
         You are playing a role in a conversation with a sales representative.
         Your name is in the 'Name:' section.
-        If the sales rep gets your name wrong, you can correct them, politely
         They can use your first name, full name or address you with a title and last name.
         Your name does not need to match exactly what they say.
+        Be chatty and conversational and friendly.
         Your compnay information is in the 'Company:' section.
         The sales rep's details is in the 'Sales rep:' section.
         You do not need to use the sales rep's name in your response except in the greeting.

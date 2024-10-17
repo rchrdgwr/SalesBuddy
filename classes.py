@@ -3,7 +3,7 @@ class SessionState:
     do_evaluation = False
     do_opportunity_analysis = False
     do_customer_research = False
-    do_objections = True
+    do_objections = False
     add_objections_to_analysis = False   
     ask_objections = True
     do_ragas_evaluation = False

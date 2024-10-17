@@ -44,12 +44,18 @@ async def callback_run_scenario(action):
     session_state = cl.user_session.get("session_state", None)
     session_state.add_scenario_info(selected_opportunity) 
     get_customer_background(session_state, selected_opportunity['Customer Name'])
-    print("creating objections")
-    session_state.objections = await create_objections(session_state)
-    for obj in session_state.objections:
-        print(obj)
-    print("questions created")
-    session_state.questions = get_questions(session_state.opportunity.stage, session_state.num_questions)
+    if session_state.ask_objections:
+        print("creating objections")
+        session_state.objections = await create_objections(session_state)
+        questions = []
+        for obj in session_state.objections:
+            print(obj)
+            q = {"stage": session_state.opportunity.stage, "question": obj[3:], "ground_truth": ""}
+            questions.append(q)
+        session_state.questions = questions
+    else:
+        print("questions created")
+        session_state.questions = get_questions(session_state.opportunity.stage, session_state.num_questions)
     for q in session_state.questions:
         print(q)
     opening_message = session_state.get_opening()  

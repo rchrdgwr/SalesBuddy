@@ -1,0 +1,47 @@
+HSBC Holdings Plc (HSBC) is a provider of banking and financial solutions. Its
+subsidiaries offer retail, business, and commercial banking; private banking, and wealth
+management services. The group’s portfolio of offerings comprises personal and
+commercial loans, deposit services, mortgages, card products, insurance solutions,
+global asset management, working capital and term loans, payment services,
+international trade facilitation, merger and acquisition advisory, transaction banking,
+capital markets, and risk management, investment management, and trusts and estate
+planning, among others. The group has a presence in Europe, Asia, the Middle East,
+North Africa, North America, and Latin America. HSBC is headquartered in London, the
+UK.
+
+From the Group Chairman
+Technology and sustainability are two of the trends transforming banking and the world around us. The opportunities from generative
+AI are among the most transformative within my working life. We are actively exploring a number of use cases, while also working to
+manage the associated risks.
+From Group Chief Executive
+Driving cost savings enables us to invest in technology, which is the fourth opportunity. The digitisation of our business continues to
+improve customer experience and increase efficiency. Using AI to help price complex structural options in our Foreign Exchange
+business has cut execution times down from hours to minutes. We have also identified hundreds of opportunities to leverage
+generative AI, and will focus our efforts on use cases with tangible benefits for the Group and our customers.
+Innovation also creates new avenues for growth. We recently launched Zing, which is our open market mobile platform focused on
+cross-border payments, initially available in the UK. It offers similar capabilities as Global Money does to our international Wealth
+and Personal Banking customers, but is targeted at non-HSBC customers and allows us to drive growth beyond our traditional
+customer footprint.
+From the Strategic Report 2023
+HSBC Technology Priority
+Digitize
+Improve customer experience and efficiency while investing in innovation
+In 2023, we made progress on our goal to become a digital-first bank, and our customers have been increasingly adopting our digital
+services. In CMB, 83% of customers were digitally active, an increase of 5 percentage points since 2022. Our net promoter score for
+onboarding wholesale international clients in the last quarter of 2023 improved by 12 points when compared with the first three
+months
+of the year. At 54%, more than half of WPB customers were mobile active, an increase of 6 percentage points from 2022.
+Furthermore, a total of 75% of WPB’s international customer accounts were opened digitally in 2023, an increase of 30 percentage
+points from 2022.
+We are also focused on building future-ready business models by investing in open-market propositions. In 2023, we announced a
+partnership with Tradeshift to launch a new embedded finance solution in the first half
+
+of 2024, which will provide payment and financial services embedded into trade, e-commerce and marketplace experiences. In
+January 2024, in the UK we launched Zing, a mobile platform enabling cross-border payments available to non-HSBC consumers.
+We are also investing in innovative technologies for the future. In 2024, we plan to both concentrate our efforts and increase our
+investment in artificial intelligence (‘Al’).
+At present, we employ Al in areas such as fraud detection and transaction monitoring. We also launched Al Markets, a digital service
+that utilises natural language processing to enrich the way investors interact with global markets. Additionally, we are in the process
+of piloting numerous generative Al use
+cases in areas like developer augmentation, creative content generation and knowledge management, and have identified
+hundreds more potential opportunities.
