@@ -63,10 +63,17 @@ async def display_evaluation_results(cl, session_state):
     print("Checking evaluation and objection flags")
     print(session_state.do_evaluation)
     print(session_state.add_objections_to_analysis)
+    hit_miss_ratio = "N/A"
+    hit_miss_score = 0
     if session_state.do_evaluation:
         evaluate_answers(session_state) 
     elif session_state.add_objections_to_analysis:
         await evaluate_objections(session_state)
+        for resp in session_state.responses:    
+            if resp.get('evaluation_score', 'N/A') == 1 or resp.get('evaluation_score', 'N/A') == 0:
+                hit_miss = resp.get('evaluation_score', 0)
+                hit_miss_score += hit_miss
+            hit_miss_ratio = (hit_miss_score / len(session_state.responses)) * 100
     await asyncio.sleep(1)
 
     output = f"**Session Summary**"
@@ -84,9 +91,10 @@ async def display_evaluation_results(cl, session_state):
         averages = results_df[columns_to_average].mean()
 
     await cl.Message(content="**Overall Summary (By SalesBuddy)**").send()
-    output = f"**SalesBuddy Score (1-10):** {session_state.responses[-1]['overall_score']} \n"
+    output = f"**SalesBuddy Grade (1-10):** {session_state.responses[-1]['overall_score']} \n"
     output = output + f"**SalesBuddy Evaluation:** {session_state.responses[-1]['overall_evaluation']} \n"
     output = output + f"**SalesBuddy Final Mood Score (1-10):** {session_state.responses[-1]['mood_score']} \n"
+    output = output + f"**Hit/Miss Ratio:** {hit_miss_ratio:.1f}% \n"
     await cl.Message(content=output).send()
 
     if session_state.do_ragas_evaluation:
@@ -98,12 +106,20 @@ async def display_evaluation_results(cl, session_state):
     await cl.Message(content="**Individual Question Scores**").send()
 
     for index, resp in enumerate(session_state.responses):
-        
+        eval_score = resp.get('evaluation_score', 0)
+        print(eval_score)
+        print(type(eval_score))
+        if eval_score == 1:
+            eval_output = "Hit"
+        elif eval_score == 0:
+            eval_output = "Miss"
+        else:
+            eval_output = "N/A"
         output = f"""
             **Question:** {resp.get('question', 'N/A')}
             **Answer:** {resp.get('response', 'N/A')} 
             **SalesBuddy Evaluation:** {resp.get('response_evaluation', 'N/A')}
-            **Evaluation Score:** {resp.get('evaluation_score', 'N/A')}
+            **Hit/Miss:** {eval_output}
         """
         if session_state.do_ragas_evaluation:
             scores = session_state.scores[index]

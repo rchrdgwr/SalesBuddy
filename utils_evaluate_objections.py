@@ -72,6 +72,7 @@ def process_salesbud_file(file_path: str) -> List[Tuple[ObjectionInput, Objectio
 class ObjectionlPrompt(PydanticPrompt[ObjectionInput, ObjectionOutput]):
     instruction = "You are an expert technology sales rep that is tasked with judging if response satisfies potential customer's objection (user input). \
     Given an user input and sales rep response, output True if the response satisfies the objection by the potential customer"
+
     input_model = ObjectionInput
     output_model = ObjectionOutput
     examples = process_salesbud_file('salesbud_examples.csv')
@@ -94,6 +95,8 @@ class SatisfyRate(MetricWithLLM, SingleTurnMetric):
         prompt_response = await self.objection_prompt.generate(
             data=prompt_input, llm=self.llm
         )
+        print("prompt_response")
+        print(prompt_response)
         return int(prompt_response.satisfy)
     
 async def generate_objection_score(question_answer):

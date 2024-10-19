@@ -21,9 +21,8 @@ def prepare_chain_parameters(session_state, message, history):
         ground_truth = session_state.questions[session_state.current_question_index - 1]["ground_truth"]
         for response in session_state.responses:
             all_questions_answers += f"Question: {response['question']}\nAnswer: {response['response']}\n\n"
-        command = """Thank the customer, offer a comment on the answer and overall performance.
-            Conclude the conversation with a conclusion based on all of the questions and answers.
-            Give a polite farewell. 
+        command = """Offer a comment on their last answer. Then conclude the conversation with a polite farewell
+          and a suggestion for the next step. 
         """
     else:
         previous_question = session_state.questions[session_state.current_question_index - 1]["question"]
