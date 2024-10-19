@@ -1,7 +1,7 @@
 class SessionState:
     session_stage = ""
     do_evaluation = False
-    do_opportunity_analysis = False
+    do_opportunity_analysis = True
     do_customer_research = False
     do_objections = False
     add_objections_to_analysis = True   
@@ -33,10 +33,12 @@ class SessionState:
     command = ""
     scores = []
     llm_next_steps = ""
+    opportunity_review_results = None
+    opportunity_review_report = None
     def __init__(self):
         self.session_stage = "research"
         self.do_evaluation = False
-        self.do_opportunity_analysis = False
+        self.do_opportunity_analysis = True
         self.do_customer_research = True
         self.do_objections = False
         self.add_objections_to_analysis = False
@@ -72,6 +74,8 @@ class SessionState:
         self.customer = None
         self.opportunity = None
         self.scenario = None
+        self.opportunity_review_results = None
+        self.opportunity_review_report = None
     class Company:
         def __init__(self, name, description, product, product_summary, product_description):
             self.name = name

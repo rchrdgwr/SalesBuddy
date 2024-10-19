@@ -1,12 +1,14 @@
 import asyncio
 import chainlit as cl
+import os
 from langchain_openai import ChatOpenAI
 
 from utils_actions import offer_actions,offer_initial_actions
+from utils_customer_research import read_markdown_file
 from utils_data import get_company_data, get_opportunities
-from utils_prompt import get_chat_prompt
 from utils_objections import create_objections
-
+from utils_opportunity_review import prep_opportunity_review
+from utils_prompt import get_chat_prompt
 
 async def prep_start(session_state):
 
@@ -64,7 +66,11 @@ async def prep_opportunity_analysis():
     await cl.Message(content=opportunity_analysis_message).send()
     
     if session_state.do_opportunity_analysis:
-        pass
+        agent_1_message = "*Retrieving and reviewing opportunity data from SalesForce CRM ...*"
+        await cl.Message(content=agent_1_message).send()
+        await prep_opportunity_review(session_state)
+        report = session_state.opportunity_review_report
+        await cl.Message(content=report).send()
     else:
 
         agent_1_message = "*Retrieving data from SalesForce CRM ...*"
@@ -85,24 +91,29 @@ async def prep_opportunity_analysis():
         await asyncio.sleep(1)
         output_message = "**Analysis Results**"
         await cl.Message(content=output_message).send()
-        output_messages = get_opportunity_analysis()
-        for output_message in output_messages:  
-            await cl.Message(content=output_message).send()
-            await cl.Message(content="").send() 
 
-        if session_state.add_objections_to_analysis:
-            output_message = "**Risks**"
-            await cl.Message(content=output_message).send()
-            for obj in session_state.objections:
-                await cl.Message(content=obj).send()
+        markdown_file_path = "reports/HSBC Opportunity Review Report.md"
+        if os.path.exists(markdown_file_path):
+            await cl.Message(content=read_markdown_file(markdown_file_path)).send() 
+        else:
+            output_messages = get_opportunity_analysis()
+            for output_message in output_messages:  
+                await cl.Message(content=output_message).send()
+                await cl.Message(content="").send() 
 
-        output_message = "**Next Steps**"
-        await cl.Message(content=output_message).send()
-        output_messages = get_next_steps()
-        for output_message in output_messages:  
+            if session_state.add_objections_to_analysis:
+                output_message = "**Risks**"
+                await cl.Message(content=output_message).send()
+                for obj in session_state.objections:
+                    await cl.Message(content=obj).send()
+
+            output_message = "**Next Steps**"
             await cl.Message(content=output_message).send()
-            await cl.Message(content="").send() 
-        await cl.Message(content="\n\n").send()
+            output_messages = get_next_steps()
+            for output_message in output_messages:  
+                await cl.Message(content=output_message).send()
+                await cl.Message(content="").send() 
+            await cl.Message(content="\n\n").send()
 
     await offer_actions()
 

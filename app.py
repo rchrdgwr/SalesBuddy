@@ -21,6 +21,7 @@ from utils_simulation import do_simulation
 dotenv.load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 tavily_api_key = os.getenv("TAVILY_API_KEY")
+langchain_api_key = os.getenv("LANGCHAIN_API_KEY")
 
 llm_model = "gpt-4o-mini"
 set_llm_cache(InMemoryCache())

@@ -335,3 +335,4 @@ async def generete_pdf(state: ResearchState):
     msg = generate_pdf_from_md(state['report'], filename=pdf_file_path)
 
     return {"messages": [AIMessage(content=msg)]}
+

@@ -65,8 +65,6 @@ async def callback_run_scenario(action):
     ]
     await cl.Message(content="Click to start simulation", actions=start_actions).send()
 
-
-
 async def callback_start_scenario():
     print("callback_start_scenario()")
     session_state = cl.user_session.get("session_state", None)
