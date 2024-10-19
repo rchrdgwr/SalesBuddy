@@ -18,11 +18,20 @@ from qdrant_client.http.models import Distance, VectorParams
 
 
 async def create_objections(session_state):
-    customer_document_file = session_state.customer_research_report_pdf
-    customer_file_path = "reports/" + customer_document_file
-    bettertech_document_file = session_state.bettetech_value_proposition_pdf
-    bettertech_file_path = "data/" + bettertech_document_file
-    objections = await process_files(customer_file_path, bettertech_file_path)
+    if session_state.use_objection_cache:
+
+        objections = [
+            "1. Can you provide customer references in our industry?",
+            "2. Second question, what training options are available for our team?",
+            "3. Last but not least, your pricing seems high compared to some other solutions we've seen. Is there any flexibility??",
+        ]
+
+    else:
+        customer_document_file = session_state.customer_research_report_pdf
+        customer_file_path = "reports/" + customer_document_file
+        bettertech_document_file = session_state.bettetech_value_proposition_pdf
+        bettertech_file_path = "data/" + bettertech_document_file
+        objections = await process_files(customer_file_path, bettertech_file_path)
     return objections
 
 

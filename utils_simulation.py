@@ -51,7 +51,7 @@ async def do_simulation(client, session_state, message):
             if session_state.do_voice:
                 await reply_with_voice(cl, client, message_to_rep)
             else:
-                await cl.Message(message_to_rep).send()
+                await cl.Message(content=message_to_rep, author="John Smith").send()
             # await cl.Message(this_response).send()
             history.append({"role": "assistant", "content": response_content})
             cl.user_session.set("history", history)
@@ -74,8 +74,10 @@ async def do_simulation(client, session_state, message):
             if session_state.do_evaluation:
                 await display_evaluation_results(cl, session_state)
             else:
+                await cl.Message(content="**Simulation Complete**").send()
                 evaluate_actions = [
                     cl.Action(name="Evaluate Performance", value="evaluate", description="Evaluate Performance"),
                     cl.Action(name="Display Queries and Responses", value="display_llm_responses", description="Display LLM Responses")
                 ]
-                await cl.Message(content="Click to evaluate", actions=evaluate_actions).send()
+                await cl.Message(content="Click to evaluate performance", actions=evaluate_actions).send()
+                await cl.Message(content="\n\n").send()

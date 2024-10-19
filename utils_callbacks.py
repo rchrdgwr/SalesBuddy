@@ -66,15 +66,25 @@ async def callback_run_scenario(action):
     await cl.Message(content="Click to start simulation", actions=start_actions).send()
 
 
+
 async def callback_start_scenario():
     print("callback_start_scenario()")
     session_state = cl.user_session.get("session_state", None)
+    await cl.Message(content="3...").send()
+    await asyncio.sleep(1)
+    await cl.Message(content="2...").send()
+    await asyncio.sleep(1)
+    await cl.Message(content="1...").send()
+    await asyncio.sleep(1)
+    await cl.Message(content="**Simulation Starting**").send()
+    await cl.Message(content="\n\n").send()
     start_time = datetime.now()
     print("setting start time")
     session_state.start_time = start_time
     output = f"{session_state.customer.contact_name} joins the zoom call"
     print(output)
     await cl.Message(content=output).send()
+    await cl.Message(content="\n\n").send()
 
 async def callback_evaluate_performance():
     session_state = cl.user_session.get("session_state", None)

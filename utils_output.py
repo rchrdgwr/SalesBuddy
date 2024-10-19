@@ -3,8 +3,8 @@ import json
 import re
 from datetime import datetime
 
-from utils_evaluate import evaluate_answers
-
+from utils_evaluate import evaluate_answers, evaluate_objections
+from utils_prep import offer_initial_actions
 async def display_llm_responses(cl, session_state):
     output = f"**Responses**"
     await cl.Message(content=output).send()
@@ -61,7 +61,10 @@ async def display_evaluation_results(cl, session_state):
     out_text = "*Preparing evaluation results ...*"
     await cl.Message(content=out_text).send()
 
-    evaluate_answers(session_state) 
+    if session_state.do_evaluation:
+        evaluate_answers(session_state) 
+    elif session_state.add_objections_to_analysis:
+        evaluate_objections(session_state)
     await asyncio.sleep(1)
 
     output = f"**Session Summary**"
@@ -73,15 +76,15 @@ async def display_evaluation_results(cl, session_state):
     output = output + f"**Total Questions Answered:** {len(session_state.responses)} \n"
     await cl.Message(content=output).send()
 
-    results_df = session_state.ragas_results.to_pandas()
-    columns_to_average = ['answer_relevancy', 'answer_correctness']
-    averages = results_df[columns_to_average].mean()
+    if session_state.do_ragas_evaluation:
+        results_df = session_state.ragas_results.to_pandas()
+        columns_to_average = ['answer_relevancy', 'answer_correctness']
+        averages = results_df[columns_to_average].mean()
 
     await cl.Message(content="**Overall Summary (By SalesBuddy)**").send()
-    output = f"**Overall Score:** {session_state.responses[-1]['overall_score']} \n"
-    output = output + f"**Overall Evaluation:** {session_state.responses[-1]['overall_evaluation']} \n"
-    output = output + f"**Final Mood Score:** {session_state.responses[-1]['mood_score']} \n"
-    output = output + f"**Customer Next Steps:** {session_state.llm_next_steps} \n"
+    output = f"**SalesBuddy Score:** {session_state.responses[-1]['overall_score']} \n"
+    output = output + f"**SalesBuddy Evaluation:** {session_state.responses[-1]['overall_evaluation']} \n"
+    output = output + f"**SalesBuddy Final Mood Score:** {session_state.responses[-1]['mood_score']} \n"
     await cl.Message(content=output).send()
 
     if session_state.do_ragas_evaluation:
@@ -93,21 +96,23 @@ async def display_evaluation_results(cl, session_state):
     await cl.Message(content="**Individual Question Scores**").send()
 
     for index, resp in enumerate(session_state.responses):
-        scores = session_state.scores[index]
-        relevancy = results_df.iloc[index].get('answer_relevancy', 'N/A')
-        correctness = results_df.iloc[index].get('answer_correctness', 'N/A')
-        bleu_score = scores.get('bleu_score', 'N/A')
-        rouge1_score = scores.get('rouge_score', {}).get('rouge1', 'N/A')
-        rouge1_output = format_rogue_score(rouge1_score)
-        rougeL_score = scores.get('rouge_score', {}).get('rougeL', 'N/A')
-        rougeL_output = format_rogue_score(rougeL_score)
-        semantic_similarity_score = scores.get('semantic_similarity_score', 'N/A')
+        
         output = f"""
             **Question:** {resp.get('question', 'N/A')}
-            **Answer:** {resp.get('response', 'N/A')}
-            **Ground Truth:** {resp.get('ground_truth', 'N/A')}  
+            **Answer:** {resp.get('response', 'N/A')} 
+            **SalesBuddy Evaluation:** {resp.get('response_evaluation', 'N/A')}
+            **Evaluation Score:** {resp.get('response_score', 'N/A')}
         """
         if session_state.do_ragas_evaluation:
+            scores = session_state.scores[index]
+            relevancy = scores.get('answer_relevancy', 'N/A')
+            correctness = scores.get('answer_correctness', 'N/A')
+            bleu_score = scores.get('bleu_score', 'N/A')
+            rouge1_score = scores.get('rouge_score', {}).get('rouge1', 'N/A')
+            rouge1_output = format_rogue_score(rouge1_score)
+            rougeL_score = scores.get('rouge_score', {}).get('rougeL', 'N/A')
+            rougeL_output = format_rogue_score(rougeL_score)
+            semantic_similarity_score = scores.get('semantic_similarity_score', 'N/A')
             numbers = f"""   
                 **Answer Relevancy:** {format_score(relevancy)}
                 **Answer Correctness:** {format_score(correctness)}
@@ -120,3 +125,5 @@ async def display_evaluation_results(cl, session_state):
             await cl.Message(content=numbers).send()
         else:
             await cl.Message(content=output).send()
+
+    await offer_initial_actions()

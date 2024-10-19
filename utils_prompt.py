@@ -30,6 +30,9 @@ def get_user_template_openai_short():
 
         Rep Answer:
         {rep_answer}
+
+        All Questions and Answers:
+        {all_questions_answers}
         
     """
     return user_template
@@ -81,6 +84,9 @@ def get_user_template_openai_long():
         Rep Answer:
         {rep_answer}
         
+        All Questions and Answers:
+        {all_questions_answers}
+        
         Conversation History:
         {conversation_history}
     """
@@ -110,6 +116,8 @@ def get_system_template_openai_short():
         You can make conversation but you must follow the command.
         If a previous question and answer are provided, you must evaluate the rep's answer.
         You will perform evaluation based on how well and thoroughly the rep answered the previous question.
+        If asked to provide a conclusion, you must consider all of the rep's answers to your questions.
+        These are provided in the 'All questions and answers:' section.
         You will ALWAYS provide your response in valid JSON format
         Remember all string values must be enclosed in double quotes.
         You will include with the following fields in JSON format:

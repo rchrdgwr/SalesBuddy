@@ -92,6 +92,24 @@ class SatisfyRate(MetricWithLLM, SingleTurnMetric):
         )
         return int(prompt_response.satisfy)
     
+async def generate_objection_scores(question_answer):
+    from langchain_openai import ChatOpenAI
+    from ragas.llms.base import LangchainLLMWrapper
+    import pandas as pd
+    # user_response= pd.read_csv(file_path)
+    openai_model = LangchainLLMWrapper(ChatOpenAI(model_name="gpt-4o", api_key=OPENAI_API_KEY))
+    scorer = SatisfyRate(llm=openai_model)
+    
+    sample = SingleTurnSample(user_input=question_answer['objection'], response=question_answer['answer'])
+    
+    #(user_response['objection'][num], user_response['response'][num])
+    satisfy_0_1 = await scorer.single_turn_ascore(sample)
+    
+    print (question_answer['objection'], question_answer['answer'], satisfy_0_1)
+    # Implement your logic to generate a response based on the user's input
+    return satisfy_0_1 #f"Response to your objection: {user_response['objection'][num]}, {user_response['response'][num]}, {satisfy_0_1}" 
+
+    
 async def generate_response_to_objection(file_path, num):
     from langchain_openai import ChatOpenAI
     from ragas.llms.base import LangchainLLMWrapper
@@ -125,4 +143,3 @@ if __name__ == "__main__":
 
     # Run the main async function
     asyncio.run(main(file_path))
-

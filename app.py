@@ -31,7 +31,22 @@ whisper_model = whisper.load_model("base")
 # Action callbacks
 #############################################
 
-@cl.action_callback("HSBC: Lending - Loan Origination System (Qualification)")
+@cl.action_callback("Deal Analysis")
+async def on_action_anayze_deal(action):
+    session_state = cl.user_session.get("session_state", None)
+    await prep_opportunities(session_state)
+
+@cl.action_callback("Customer Research")
+async def on_action_anayze_deal(action):
+    session_state = cl.user_session.get("session_state", None)
+    await get_latest_news("HSBC")
+
+@cl.action_callback("Sales Simulation")
+async def on_action_sales_simulation(action):
+    session_state = cl.user_session.get("session_state", None)
+    await callback_run_scenario(action)
+
+@cl.action_callback("HSBC: Lending - Loan Origination System (Proposal)")
 async def on_action_anayze_opportunity(action):
     await prep_opportunity_analysis()
 
@@ -57,6 +72,7 @@ async def on_action_display_queries_responses(action):
     await callback_display_queries_responses()
 
 
+
 #############################################
 ### On Chat Start (Session Start) Section ###
 #############################################
@@ -74,9 +90,7 @@ async def on_chat_start():
 
     await prep_start(session_state)
 
-    await prep_opportunities(session_state)
-
-    
+    # await prep_opportunities(session_state)
 
     # await prep_opportunity_analysis(session_state)
 

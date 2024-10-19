@@ -2,7 +2,7 @@ import asyncio
 import chainlit as cl
 from langchain_openai import ChatOpenAI
 
-from utils_actions import offer_actions
+from utils_actions import offer_actions,offer_initial_actions
 from utils_data import get_company_data, get_opportunities
 from utils_prompt import get_chat_prompt
 from utils_objections import create_objections
@@ -16,9 +16,18 @@ async def prep_start(session_state):
     simple_chain = chat_prompt | chat_model
     cl.user_session.set("chain", simple_chain)
 
-    welcome_message = f"**Welcome to {session_state.company.name} SalesBuddy**\n*Home of {session_state.company.product}*"
+    welcome_message = f"**Welcome to {session_state.company.name} SalesBuddy**\n*Your AI assistant for sales and sales management*"
     await cl.Message(content=welcome_message).send()
-    await cl.Message(content=session_state.company.product_summary).send()
+    # await cl.Message(content=session_state.company.product_summary).send()
+
+    image = cl.Image(path="images/salesbuddy_logo.jpg", name="salesbuddy_logo", display="inline")
+    await cl.Message(
+        content=" ",
+        elements=[image],
+    ).send()
+
+    await offer_initial_actions()
+
 
     opportunities = get_opportunities()
     cl.user_session.set("opportunities", opportunities)
@@ -93,6 +102,7 @@ async def prep_opportunity_analysis():
         for output_message in output_messages:  
             await cl.Message(content=output_message).send()
             await cl.Message(content="").send() 
+        await cl.Message(content="\n\n").send()
 
     await offer_actions()
 
@@ -104,7 +114,7 @@ async def prep_research(session_state):
 
 
 def get_opportunity_analysis():
-    output_1 = "**Summary:** The HSBC opportunity involves replacing the existing analytics engine for their loan origination system, valued at $250,000. The current system is slow and lacks flexibility, creating urgency due to an impending renewal with the existing vendor. Multiple meetings have been conducted, culminating in a proposal review. The decision process is progressing, with a meeting scheduled to discuss the next steps on October 18, 2024."
+    output_1 = "**Summary:** The HSBC opportunity involves replacing the existing analytics engine for their loan origination system, valued at $250,000. The current system is slow and lacks flexibility, creating urgency due to an impending renewal with the existing vendor. Multiple meetings have been conducted, culminating in a proposal review. The decision process is progressing, with a meeting scheduled on October 26 with John Smith to discuss the next steps. Potential for pilot program or final negotiations."
     output_2 = "**Score: 75**"
     output_3 = "**MEDDIC Evaluation:**" 
     output_4 = "**Metrics: 70** - The proposal discussed expected performance improvements and ROI, but specific quantitative metrics driving the decision were not detailed."

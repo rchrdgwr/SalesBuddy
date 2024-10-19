@@ -4,8 +4,9 @@ class SessionState:
     do_opportunity_analysis = False
     do_customer_research = False
     do_objections = False
-    add_objections_to_analysis = False   
+    add_objections_to_analysis = True   
     ask_objections = True
+    use_objection_cache = True
     do_ragas_evaluation = False
     customer_research_report_md = "HSBC Quarterly Report 2024-10-16.md"
     customer_research_report_pdf = "HSBC Quarterly Report 2024-10-16.pdf"
@@ -20,7 +21,7 @@ class SessionState:
     duration_minutes = None
     attitude = "Happy"
     mood_score = 5
-    num_questions = 4
+    num_questions = 2
     current_question_index = 0
     previous_answer = None
     question = ""
@@ -40,6 +41,7 @@ class SessionState:
         self.do_objections = False
         self.add_objections_to_analysis = False
         self.ask_objections = True
+        self.use_objection_cache = True
         self.do_ragas_evaluation = False
         self.customer_research_report_md = "HSBC Quarterly Report 2024-10-16.md"
         self.customer_research_report_pdf = "HSBC Quarterly Report 2024-10-16.pdf"
@@ -54,7 +56,7 @@ class SessionState:
         self.duration_minutes = None
         self.attitude = "Happy"
         self.mood_score = 5
-        self.num_questions = 4
+        self.num_questions = 2
         self.current_question_index = 0
         self.previous_answer = None
         self.question = ""

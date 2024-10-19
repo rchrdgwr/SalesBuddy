@@ -5,27 +5,32 @@ def prepare_chain_parameters(session_state, message, history):
     next_question = ""  
     ground_truth = ""
     command = ""
+    all_questions_answers = ""
     print(f"Index: {session_state.current_question_index}")
     if session_state.current_question_index == 0:
         previous_question = ""
         rep_answer = ""
         ground_truth = ""
         next_question = session_state.questions[session_state.current_question_index]["question"]
-        command = "You should greet the rep"
+        all_questions_answers = ""
+        command = "You should greet the salesrep"
     elif session_state.current_question_index >= len(session_state.questions):
         next_question = "" 
         previous_question = session_state.questions[session_state.current_question_index - 1]["question"]
         rep_answer = session_state.previous_answer
         ground_truth = session_state.questions[session_state.current_question_index - 1]["ground_truth"]
+        for response in session_state.responses:
+            all_questions_answers += f"Question: {response['question']}\nAnswer: {response['response']}\n\n"
         command = """Thank the customer, offer a comment on the answer and overall performance.
-            Conclude the conversation with a summary and give a farewell. 
-            You can add additional comments as needed.
+            Conclude the conversation with a conclusion based on all of the questions and answers.
+            Give a polite farewell. 
         """
     else:
         previous_question = session_state.questions[session_state.current_question_index - 1]["question"]
         rep_answer = session_state.previous_answer
         next_question = session_state.questions[session_state.current_question_index]["question"]
         ground_truth = session_state.questions[session_state.current_question_index]["ground_truth"]
+        all_questions_answers = ""
         command = "You should respond to the answer based on how well the rep answered the previous question."
     session_state.ground_truth = ground_truth
     session_state.question = previous_question
@@ -72,6 +77,7 @@ def prepare_chain_parameters(session_state, message, history):
             "rep_answer": rep_answer,   
             "conversation_history": history,   
             "command": command,
+            "all_questions_answers": all_questions_answers
             }
     return parm
 
