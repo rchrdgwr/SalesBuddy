@@ -31,6 +31,7 @@ sniffio==1.3.1
 #git+https://github.com/explodinggradients/ragas
 nltk
 python-dotenv
+ragas==0.2.1
 # Richards dependencies
 openai>=1.26.0
 langchain==0.3.0
