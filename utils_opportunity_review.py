@@ -348,8 +348,15 @@ def create_opportunity_review_report(structured_results):
     return opportunity_review_report
 
 def save_md_file(file_path, file_content):
-    if os.path.exists(file_path):
-        os.remove(file_path)
-        print(f"Existing file deleted: {file_path}")
-    with open(file_path, 'w', encoding='utf-8') as md_file:
-        md_file.write(file_content)
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Existing file deleted: {file_path}")
+        
+        with open(file_path, 'w', encoding='utf-8') as md_file:
+            md_file.write(file_content)
+        print(f"File saved successfully: {file_path}")
+    except PermissionError:
+        print(f"Permission denied when trying to delete or save file: {file_path}")       
+    
+    return None 
