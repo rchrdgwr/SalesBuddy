@@ -41,7 +41,7 @@ class SessionState:
         self.do_opportunity_analysis = True
         self.do_customer_research = True
         self.do_objections = False
-        self.add_objections_to_analysis = False
+        self.add_objections_to_analysis = True
         self.ask_objections = True
         self.use_objection_cache = True
         self.do_ragas_evaluation = False

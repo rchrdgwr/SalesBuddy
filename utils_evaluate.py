@@ -10,10 +10,11 @@ from ragas.metrics import (
 from rouge_score import rouge_scorer
 from sentence_transformers import SentenceTransformer, util
 
-from utils_evaluate_objections import generate_objection_scores
+from utils_evaluate_objections import generate_objection_score
 
 
-def evaluate_objections(session):
+async def evaluate_objections(session):
+    print("evaluate_objections()")
 
     for response in session.responses:
         question = response.get("question", "")
@@ -24,8 +25,10 @@ def evaluate_objections(session):
         q_and_a = {
             "objection": question,
             "answer": answer
-        }         
-        score = generate_objection_scores(q_and_a)
+        }       
+        print(q_and_a)
+        score = await generate_objection_score(q_and_a)
+        print(score)
         response["evaluation_score"] = score
 
 

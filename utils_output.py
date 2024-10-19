@@ -60,11 +60,13 @@ def format_datetime(dt):
 async def display_evaluation_results(cl, session_state):
     out_text = "*Preparing evaluation results ...*"
     await cl.Message(content=out_text).send()
-
+    print("Checking evaluation and objection flags")
+    print(session_state.do_evaluation)
+    print(session_state.add_objections_to_analysis)
     if session_state.do_evaluation:
         evaluate_answers(session_state) 
     elif session_state.add_objections_to_analysis:
-        evaluate_objections(session_state)
+        await evaluate_objections(session_state)
     await asyncio.sleep(1)
 
     output = f"**Session Summary**"
@@ -82,9 +84,9 @@ async def display_evaluation_results(cl, session_state):
         averages = results_df[columns_to_average].mean()
 
     await cl.Message(content="**Overall Summary (By SalesBuddy)**").send()
-    output = f"**SalesBuddy Score:** {session_state.responses[-1]['overall_score']} \n"
+    output = f"**SalesBuddy Score (1-10):** {session_state.responses[-1]['overall_score']} \n"
     output = output + f"**SalesBuddy Evaluation:** {session_state.responses[-1]['overall_evaluation']} \n"
-    output = output + f"**SalesBuddy Final Mood Score:** {session_state.responses[-1]['mood_score']} \n"
+    output = output + f"**SalesBuddy Final Mood Score (1-10):** {session_state.responses[-1]['mood_score']} \n"
     await cl.Message(content=output).send()
 
     if session_state.do_ragas_evaluation:
@@ -101,7 +103,7 @@ async def display_evaluation_results(cl, session_state):
             **Question:** {resp.get('question', 'N/A')}
             **Answer:** {resp.get('response', 'N/A')} 
             **SalesBuddy Evaluation:** {resp.get('response_evaluation', 'N/A')}
-            **Evaluation Score:** {resp.get('response_score', 'N/A')}
+            **Evaluation Score:** {resp.get('evaluation_score', 'N/A')}
         """
         if session_state.do_ragas_evaluation:
             scores = session_state.scores[index]

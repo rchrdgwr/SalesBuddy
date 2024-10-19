@@ -1,18 +1,22 @@
-from ragas.metrics.base import MetricWithLLM, SingleTurnMetric
-from ragas.prompt.pydantic_prompt import PydanticPrompt
-from pydantic import BaseModel, Field
-import pandas as pd
-from typing import List, Tuple
-from datetime import datetime
-import sys
-from dataclasses import dataclass, field
-from ragas.metrics.base import MetricType
-from ragas.messages import AIMessage, HumanMessage, ToolMessage, ToolCall
-from ragas import SingleTurnSample, MultiTurnSample
-import typing as t
 import asyncio
 import dotenv
 import os
+import pandas as pd
+import sys
+import typing as t
+
+from dataclasses import dataclass, field
+from datetime import datetime
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
+from ragas import SingleTurnSample
+from ragas.llms.base import LangchainLLMWrapper
+from ragas.metrics.base import MetricType
+from ragas.metrics.base import MetricWithLLM, SingleTurnMetric
+from ragas.prompt.pydantic_prompt import PydanticPrompt
+from typing import List, Tuple
+    
+
 # Load environment variables from .env file
 dotenv.load_dotenv()
 
@@ -92,10 +96,8 @@ class SatisfyRate(MetricWithLLM, SingleTurnMetric):
         )
         return int(prompt_response.satisfy)
     
-async def generate_objection_scores(question_answer):
-    from langchain_openai import ChatOpenAI
-    from ragas.llms.base import LangchainLLMWrapper
-    import pandas as pd
+async def generate_objection_score(question_answer):
+    print("generate_objection_scores()")
     # user_response= pd.read_csv(file_path)
     openai_model = LangchainLLMWrapper(ChatOpenAI(model_name="gpt-4o", api_key=OPENAI_API_KEY))
     scorer = SatisfyRate(llm=openai_model)
@@ -104,6 +106,7 @@ async def generate_objection_scores(question_answer):
     
     #(user_response['objection'][num], user_response['response'][num])
     satisfy_0_1 = await scorer.single_turn_ascore(sample)
+    print(satisfy_0_1)
     
     print (question_answer['objection'], question_answer['answer'], satisfy_0_1)
     # Implement your logic to generate a response based on the user's input
