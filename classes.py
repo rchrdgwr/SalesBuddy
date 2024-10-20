@@ -36,6 +36,10 @@ class SessionState:
     opportunity_review_results = None
     opportunity_review_report = None
     def __init__(self):
+        self.company = None
+        self.customer = None
+        self.opportunity = None
+        self.scenario = None
         self.session_stage = "research"
         self.do_evaluation = False
         self.do_opportunity_analysis = False
@@ -103,11 +107,7 @@ class SessionState:
             self.activity = activity
             self.next_steps = next_steps
             
-    def __init__(self):
-        self.company = None
-        self.customer = None
-        self.opportunity = None
-        self.scenario = None
+
 
     def add_company_info(self, name, description, product, product_summary, product_description):
         self.company = self.Company(name, description, product, product_summary, product_description)

@@ -107,8 +107,6 @@ async def display_evaluation_results(cl, session_state):
 
     for index, resp in enumerate(session_state.responses):
         eval_score = resp.get('evaluation_score', 0)
-        print(eval_score)
-        print(type(eval_score))
         if eval_score == 1:
             eval_output = "Hit"
         elif eval_score == 0:

@@ -67,10 +67,17 @@ async def do_simulation(client, session_state, message):
                 await cl.Message(message_to_rep).send()
             session_state.status = "complete"
             end_time = datetime.now()
-            duration = end_time - session_state.start_time
-            duration_minutes = round(duration.total_seconds() / 60)
             session_state.end_time = end_time
-            session_state.duration_minutes = duration_minutes
+            if session_state.start_time:
+                try:
+                    duration = end_time - session_state.start_time
+                    duration_minutes = round(duration.total_seconds() / 60)
+                except:
+                    print("Error calculating duration")
+                    duration = 130
+                    duration_minutes = 2
+                    
+            session_state.duration_minutes = duration_minutes   
             if session_state.do_evaluation:
                 await display_evaluation_results(cl, session_state)
             else:

@@ -22,9 +22,9 @@ async def create_objections(session_state):
 
         objections = [
             "1. Can you provide customer references in the banking and financial services industry?",
-            "2. Second question, what training options are available for our team, given the number of employees and their global distribution?",
-            "3. Last but not least, your pricing seems high compared to some other solutions we've seen. Can you provide any flexibility with HSBC's pricing?",
+            "2. What training options are available for our team, given the number of employees and their global distribution?",  
         ]
+        #  "3. Last but not least, your pricing seems high compared to some other solutions we've seen. Can you provide any flexibility with HSBC's pricing?",
 
     else:
         customer_document_file = session_state.customer_research_report_pdf

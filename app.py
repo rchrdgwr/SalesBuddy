@@ -95,6 +95,8 @@ async def on_action_display_queries_responses(action):
 @cl.on_chat_start
 async def on_chat_start():
     session_state = SessionState()
+    print("Creating new session state")
+    print(session_state.responses)
     set_session_state_variables(session_state)
     cl.user_session.set("session_state", session_state)
     session_state.llm_model = llm_model
