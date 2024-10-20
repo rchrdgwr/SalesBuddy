@@ -2,7 +2,7 @@ class SessionState:
     session_stage = ""
     do_evaluation = False
     do_opportunity_analysis = True
-    do_customer_research = False
+    do_customer_research = True
     do_objections = False
     add_objections_to_analysis = True   
     ask_objections = True
