@@ -1,8 +1,8 @@
 class SessionState:
     session_stage = ""
     do_evaluation = False
-    do_opportunity_analysis = True
-    do_customer_research = True
+    do_opportunity_analysis = False
+    do_customer_research = False
     do_objections = False
     add_objections_to_analysis = True   
     ask_objections = True
@@ -38,8 +38,8 @@ class SessionState:
     def __init__(self):
         self.session_stage = "research"
         self.do_evaluation = False
-        self.do_opportunity_analysis = True
-        self.do_customer_research = True
+        self.do_opportunity_analysis = False
+        self.do_customer_research = False
         self.do_objections = False
         self.add_objections_to_analysis = True
         self.ask_objections = True

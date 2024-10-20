@@ -30,6 +30,12 @@ def set_session_state_variables(session_state):
             session_state.do_customer_research = True
         else:
             session_state.do_customer_research = False
+    if "DO_OPPORTUNITY_ANALYSIS" in os.environ:
+        do_opportunity_analysis = os.getenv("DO_OPPORTUNITY_ANALYSIS")
+        if do_opportunity_analysis.lower() == "true":
+            session_state.do_opportunity_analysis = True
+        else:
+            session_state.do_opportunity_analysis = False
 
 
 llm_model = "gpt-4o-mini"
