@@ -62,11 +62,11 @@ async def prep_opportunities(session_state):
 async def prep_opportunity_analysis():
 
     session_state = cl.user_session.get("session_state", None)
-    opportunity_analysis_message = "Retrieving and Reviewing HSBC Opportunitiy - please wait..."
+    opportunity_analysis_message = "Reviewing HSBC Opportunitiy - please wait..."
     await cl.Message(content=opportunity_analysis_message).send()
     
     if session_state.do_opportunity_analysis:
-        agent_1_message = "*Retrieving and reviewing opportunity data from SalesForce CRM ...*"
+        agent_1_message = "*Retrieving and evaluating opportunity data from SalesForce CRM ...*"
         await cl.Message(content=agent_1_message).send()
         await prep_opportunity_review(session_state)
         report = session_state.opportunity_review_report
@@ -78,11 +78,11 @@ async def prep_opportunity_analysis():
         await asyncio.sleep(2)
 
         if session_state.add_objections_to_analysis:
-            agent_3_message = "*Evaluating opportunity and identifying risks ...*"
+            agent_3_message = "*Evaluating opportunity data and identifying risks ...*"
             await cl.Message(content=agent_3_message).send()
             session_state.objections = await create_objections(session_state)
         else:
-            agent_2_message = "*Evaluating opportunity ...*"
+            agent_2_message = "*Evaluating opportunity data...*"
             await cl.Message(content=agent_2_message).send()
             await asyncio.sleep(1.5)
 

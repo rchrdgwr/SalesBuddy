@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from langchain.document_loaders import CSVLoader, PyPDFLoader, Docx2txtLoader
 from langgraph.graph import StateGraph, END
 from langchain.prompts import PromptTemplate
@@ -134,7 +135,8 @@ def agent_2() -> Dict[str, Any]:
 
         Assign an overall opportunity score (1-100) with 100 means that the opportunity is a sure win.
 
-        Provide a Summary of the opportunity.
+        Provide a Summary of the opportunity. There must always be a summary. Ensure the summary is on the 
+        same line as the Summary: title
 
         Evaluate the opportunity based on each MEDDIC criterion and assign a score for each criterion:
         1. Metrics
@@ -168,10 +170,13 @@ def agent_2() -> Dict[str, Any]:
         else:
             raise ValueError(f"Unexpected response type: {type(response)}")
         
+        print(response_content)
         # Parse the response content
         lines = response_content.split('\n')
         summary = next((line.split('Summary:')[1].strip() for line in lines if line.startswith('Summary:')), 'N/A')
+        print(summary)  
         score = next((int(line.split('Score:')[1].strip()) for line in lines if line.startswith('Score:')), 0)
+        print(score)
         meddic_eval = {}
         current_criterion = None
         for line in lines:
@@ -197,6 +202,108 @@ def agent_2() -> Dict[str, Any]:
             'meddic_evaluation': str(e)
         }
     
+def clean_and_parse_json(json_string):
+    # Remove triple backticks and "json" label if present
+    json_string = re.sub(r'^```json\s*', '', json_string)
+    json_string = re.sub(r'\s*```$', '', json_string)
+    
+    # Remove any leading/trailing whitespace
+    json_string = json_string.strip()
+    
+    # Parse the cleaned JSON string
+    try:
+        return json.loads(json_string)
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON: {e}")
+        return None
+    
+def agent_2_json() -> Dict[str, Any]:
+    """Agent 2: Evaluate opportunity based on MEDDIC criteria."""
+    try:
+        results = qdrant.scroll(collection_name="opportunities", limit=100)
+        if not results or len(results[0]) == 0:
+            raise ValueError("No documents found in Qdrant")
+
+        full_text = " ".join([point.payload.get("text", "") for point in results[0]])
+        
+        meddic_template = """
+        Analyze the following opportunity information using the MEDDIC sales methodology:
+
+        {opportunity_info}
+
+        Assign an overall opportunity score (1-100) with 100 means that the opportunity is a sure win.
+
+        Provide a Summary of the opportunity. There must always be a summary. Ensure the summary is on the 
+        same line as the Summary: title
+
+        Evaluate the opportunity based on each MEDDIC criterion and assign a score for each criterion:
+        1. Metrics
+        2. Economic Buyer
+        3. Decision Criteria
+        4. Decision Process
+        5. Identify Pain
+        6. Champion
+
+        Your response must be in JSON format.
+        Use the following keys in the JSON:
+        Summary: Opportunity Summary
+        Score: Overall Opportunity Score between 1 to 100 based on MEDDIC criteria
+        Metrics Score: MEDDIC score on Metrics
+        Metrics Evaluation: Evaluation on MEDDIC Metrics criterion
+        Economic Buyer Score: MEDDIC Score on Economic Buyer
+        Economic Buyer Evaluation: Evaluation on MEDDIC Economic Buyer criterion
+        Decision Criteria Score: MEDDIC Score on Decision Criteria
+        Decision Criteria Evaluation: Evaluation on MEDDIC Decision Criteria criterion
+        Decision Process Score: MEDDIC Score on Decision Process
+        Decision Process Evaluation: Evaluation on MEDDIC Decision Process criterion
+        Identify Pain Score: MEDDIC Score on Identify Pain
+        Identify Pain Evaluation: Evaluation on MEDDIC Identify Pain criterion
+        Champion Score: MEDDIC Score on Champion
+        Champion Evaluation: Evaluation on MEDDIC Champion criterion
+        """
+
+        meddic_prompt = PromptTemplate(template=meddic_template, input_variables=["opportunity_info"])
+        meddic_chain = meddic_prompt | llm
+        
+        response = meddic_chain.invoke({"opportunity_info": full_text})
+        
+        if isinstance(response, AIMessage):
+            response_content = response.content
+        elif isinstance(response, str):
+            response_content = response
+        else:
+            raise ValueError(f"Unexpected response type: {type(response)}")
+        
+        print(response_content)
+
+        meddic_data = clean_and_parse_json(response_content)
+        print("jsonified")
+        print(meddic_data)
+        # Create the output structure
+        output = {
+            'summary': meddic_data.get('Summary', 'N/A'),
+            'score': meddic_data.get('Score', 0),
+            'meddic_evaluation': {
+                'Metrics': f"{meddic_data.get('Metrics Score', 'N/A')} - {meddic_data.get('Metrics Evaluation', 'N/A')}",
+                'Economic Buyer': f"{meddic_data.get('Economic Buyer Score', 'N/A')} - {meddic_data.get('Economic Buyer Evaluation', 'N/A')}",
+                'Decision Criteria': f"{meddic_data.get('Decision Criteria Score', 'N/A')} - {meddic_data.get('Decision Criteria Evaluation', 'N/A')}",
+                'Decision Process': f"{meddic_data.get('Decision Process Score', 'N/A')} - {meddic_data.get('Decision Process Evaluation', 'N/A')}",
+                'Identify Pain': f"{meddic_data.get('Identify Pain Score', 'N/A')} - {meddic_data.get('Identify Pain Evaluation', 'N/A')}",
+                'Champion': f"{meddic_data.get('Champion Score', 'N/A')} - {meddic_data.get('Champion Evaluation', 'N/A')}"
+            }
+        }
+        print("output")
+        print(output)
+        return output
+
+    except Exception as e:
+        print(f"Error in agent_2_json: {str(e)}")
+        return {
+            'summary': "Error occurred during evaluation",
+            'score': 0,
+            'meddic_evaluation': str(e)
+        }
+
 def agent_3(meddic_evaluation: Dict[str, Any]) -> Dict[str, Any]:
     """Agent 3: Suggest next best action and talking points."""
     try:
@@ -250,7 +357,7 @@ def process_document(state: State) -> State:
 
 def evaluate_opportunity(state: State) -> State:
     print("Agent 2: Evaluating opportunity...")
-    result = agent_2()
+    result = agent_2_json()
     return State(file_path=state.file_path, document_processed=state.document_processed, opportunity_evaluation=result)
 
 def suggest_next_action(state: State) -> State:
