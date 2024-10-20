@@ -21,9 +21,9 @@ async def create_objections(session_state):
     if session_state.use_objection_cache:
 
         objections = [
-            "1. Can you provide customer references in our industry?",
-            "2. Second question, what training options are available for our team?",
-            "3. Last but not least, your pricing seems high compared to some other solutions we've seen. Is there any flexibility??",
+            "1. Can you provide customer references in the banking and financial services industry?",
+            "2. Second question, what training options are available for our team, given the number of employees and their global distribution?",
+            "3. Last but not least, your pricing seems high compared to some other solutions we've seen. Can you provide any flexibility with HSBC's pricing?",
         ]
 
     else:
