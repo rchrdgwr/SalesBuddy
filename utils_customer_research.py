@@ -247,7 +247,7 @@ def should_continue(state: ResearchState) -> Literal["tools", "curate"]:
     return "curate"
 
 async def select_and_process(state: ResearchState):
-     
+    msg = "Curating Documents ...\n" 
     prompt = f"""You are an expert researcher specializing in analyzing portfolio companies.\n
 Your current task is to review a list of documents and select the most relevant URLs related to recent developments for the following company: {state['company']}.\n
 Be aware that some documents may refer to other companies with similar or identical names, potentially leading to conflicting information.\n

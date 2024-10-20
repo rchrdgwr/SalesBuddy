@@ -8,8 +8,8 @@ class SessionState:
     ask_objections = True
     use_objection_cache = True
     do_ragas_evaluation = False
-    customer_research_report_md = "HSBC Quarterly Report 2024-10-16.md"
-    customer_research_report_pdf = "HSBC Quarterly Report 2024-10-16.pdf"
+    customer_research_report_md = "HSBC Quarterly Report 2024-10-19.md"
+    customer_research_report_pdf = "HSBC Quarterly Report 2024-10-19.pdf"
     bettetech_value_proposition_pdf = "BetterTech Lending Analytics Solution.pdf"
     do_voice = True
     status = "active"
@@ -45,8 +45,8 @@ class SessionState:
         self.ask_objections = True
         self.use_objection_cache = True
         self.do_ragas_evaluation = False
-        self.customer_research_report_md = "HSBC Quarterly Report 2024-10-16.md"
-        self.customer_research_report_pdf = "HSBC Quarterly Report 2024-10-16.pdf"
+        self.customer_research_report_md = "HSBC Quarterly Report 2024-10-19.md"
+        self.customer_research_report_pdf = "HSBC Quarterly Report 2024-10-19.pdf"
         self.bettetech_value_proposition_pdf = "BetterTech Lending Analytics Solution.pdf"
         self.do_voice = True
         self.status = "active"

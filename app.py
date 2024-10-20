@@ -23,6 +23,15 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 tavily_api_key = os.getenv("TAVILY_API_KEY")
 langchain_api_key = os.getenv("LANGCHAIN_API_KEY")
 
+def set_session_state_variables(session_state):
+    if "DO_CUSTOMER_RESEARCH" in os.environ:
+        do_customer_research = os.getenv("DO_CUSTOMER_RESEARCH")
+        if do_customer_research.lower() == "true":
+            session_state.do_customer_research = True
+        else:
+            session_state.do_customer_research = False
+
+
 llm_model = "gpt-4o-mini"
 set_llm_cache(InMemoryCache())
 client = OpenAI(api_key=openai_api_key)
@@ -80,6 +89,7 @@ async def on_action_display_queries_responses(action):
 @cl.on_chat_start
 async def on_chat_start():
     session_state = SessionState()
+    set_session_state_variables(session_state)
     cl.user_session.set("session_state", session_state)
     session_state.llm_model = llm_model
     print(session_state)
