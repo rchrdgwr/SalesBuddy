@@ -89,9 +89,7 @@ async def prep_opportunity_analysis():
         agent_3_message = "*Determining next steps ...*"
         await cl.Message(content=agent_3_message).send()
         await asyncio.sleep(1)
-        output_message = "**Analysis Results**"
-        await cl.Message(content=output_message).send()
-
+   
         markdown_file_path = "reports/HSBC Opportunity Review Report.md"
         if os.path.exists(markdown_file_path):
             await cl.Message(content=read_markdown_file(markdown_file_path)).send() 

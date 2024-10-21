@@ -113,12 +113,11 @@ async def display_evaluation_results(cl, session_state):
             eval_output = "Miss"
         else:
             eval_output = "N/A"
-        output = f"""
-            **Question:** {resp.get('question', 'N/A')}
-            **Answer:** {resp.get('response', 'N/A')} 
-            **SalesBuddy Evaluation:** {resp.get('response_evaluation', 'N/A')}
-            **Hit/Miss:** {eval_output}
-        """
+        output = f"**Question:** {resp.get('question', 'N/A')}\n"
+        output = output + f"**Answer:** {resp.get('response', 'N/A')}\n"
+        output = output + f"**SalesBuddy Evaluation:** {resp.get('response_evaluation', 'N/A')}\n"
+        output = output + f"**Hit/Miss:** {eval_output}\n"
+
         if session_state.do_ragas_evaluation:
             scores = session_state.scores[index]
             relevancy = scores.get('answer_relevancy', 'N/A')
